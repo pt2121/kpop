@@ -23,7 +23,7 @@ class KMethod(declaration: MethodDeclaration) {
         .replace("</em>", "*")
         .replace("<p>", "")
         // JavaParser adds a couple spaces to the beginning of these for some reason
-        .replace("   *", " *")
+        .replace("    *", "*")
         // {@code view} -> `view`
         .replace("\\{@code ($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
           val codeName = result.destructured
@@ -60,11 +60,12 @@ class KMethod(declaration: MethodDeclaration) {
       return null
     }
 
-    val builder = StringBuilder()
-    builder.append("<")
-    params.forEach { p -> builder.append("${p.name} : ${resolveKotlinType(p.typeBound[0])}") }
-    builder.append(">")
-    return builder.toString()
+    return params.joinToString(prefix = "<", postfix = ">") { p ->
+      if (p.typeBound.isNotEmpty())
+        "${p.name} : ${resolveKotlinType(p.typeBound.first())}"
+      else
+        "${p.name}"
+    }
   }
 
   /**

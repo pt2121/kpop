@@ -7,6 +7,7 @@ object Main {
     deleteOutputDir("RxBinding/rxbinding")
     val f = File("RxBinding/rxbinding/src/main/java/com/jakewharton/rxbinding2/view/RxView.java")
     val out = generateKotlinDir(f)
+    println("--> ${out.absoluteFile}")
     val kFile = makeKFile(f)
     kFile.generate(out)
   }
