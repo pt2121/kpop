@@ -1,14 +1,19 @@
 package com.prt2121.kpop
 
-import java.io.File
-
 object Main {
+
+  /**
+   * java -jar build/libs/KPop.jar -javafile "Some.java"
+   */
   @JvmStatic fun main(args: Array<String>) {
-    deleteOutputDir("RxBinding/rxbinding")
-    val f = File("RxBinding/rxbinding/src/main/java/com/jakewharton/rxbinding2/view/RxView.java")
-    val out = generateKotlinDir(f)
-    println("--> ${out.absoluteFile}")
-    val kFile = makeKFile(f)
-    kFile.generate(out)
+    makeCli(args)
+        ?.let(::javaFile)
+        ?.let {
+          println("it $it")
+          val out = generateKotlinDir(it)
+          println("--> ${out.absoluteFile}")
+          val kFile = makeKFile(it)
+          kFile.generate(out)
+        }
   }
 }
