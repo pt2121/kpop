@@ -3,7 +3,7 @@ package com.prt2121.kpop
 object Main {
 
   /**
-   * java -jar build/libs/KPop.jar -javafile "Some.java"
+   * java -jar build/libs/kpop.jar -f "Some.java"
    */
   @JvmStatic fun main(args: Array<String>) {
     makeCli(args)

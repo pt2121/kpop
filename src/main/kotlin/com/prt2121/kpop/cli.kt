@@ -8,14 +8,35 @@ import org.apache.commons.cli.ParseException
 import java.io.File
 
 fun makeCli(args: Array<String>): CommandLine? {
-  val jOption = Option.builder("j")
-      .longOpt("javafile")
+  val fileOpt = Option.builder("f")
+      .longOpt("java-file")
       .hasArg()
-      .desc("the input java file")
+      .desc("input java file")
+      .build()
+
+  val dirOpt = Option.builder("d")
+      .longOpt("java-dir")
+      .hasArg()
+      .desc("input java directory")
+      .build()
+
+  val includeOpt = Option.builder("i")
+      .longOpt("include-pattern")
+      .hasArg()
+      .desc("include regex pattern")
+      .build()
+
+  val excludeOpt = Option.builder("e")
+      .longOpt("exclude-pattern")
+      .hasArg()
+      .desc("exclude regex pattern")
       .build()
 
   val options = Options()
-      .addOption(jOption)
+      .addOption(fileOpt)
+      .addOption(dirOpt)
+      .addOption(includeOpt)
+      .addOption(excludeOpt)
 
   try {
     args.forEach(::println)
@@ -26,8 +47,26 @@ fun makeCli(args: Array<String>): CommandLine? {
   }
 }
 
-fun javaFile(command: CommandLine):File? =
-    if (command.hasOption("j"))
-      File(command.getOptionValue('j'))
+fun javaFile(command: CommandLine): File? =
+    if (command.hasOption("f"))
+      File(command.getOptionValue('f'))
+    else
+      null
+
+fun javaDir(command: CommandLine): File? =
+    if (command.hasOption("d"))
+      File(command.getOptionValue('d'))
+    else
+      null
+
+fun includePattern(command: CommandLine): Regex? =
+    if (command.hasOption("i"))
+      Regex(command.getOptionValue("i"))
+    else
+      null
+
+fun excludePattern(command: CommandLine): Regex? =
+    if (command.hasOption("e"))
+      Regex(command.getOptionValue("e"))
     else
       null
