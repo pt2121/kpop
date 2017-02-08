@@ -76,7 +76,7 @@ fun makeKFile(jFile: File): KFile {
   // Start parsing the java files
   val cu = JavaParser.parse(jFile)
 
-  val kFile = KFile()
+  val kFile = KFile(listOf("com.jakewharton.rxbinding2.internal.GenericTypeNullable"))
   kFile.fileName = jFile.name.replace(".java", ".kt")
 
   // Visit the appropriate nodes and extract information

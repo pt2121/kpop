@@ -7,7 +7,7 @@ import kotlin.properties.Delegates
 /**
  * Represents a kotlin file that corresponds to a Java file/class in an RxBinding module
  */
-class KFile {
+class KFile(ignoredImports: List<String> = emptyList()) {
   /**
    * These are imports of classes that Kotlin advises against using and are replaced in
    * {@link #resolveKotlinTypeByName}
@@ -17,7 +17,7 @@ class KFile {
       "android.support.annotation.CheckResult",
       "android.support.annotation.NonNull",
       "android.support.annotation.RequiresApi"
-  )
+  ) + ignoredImports
 
   var fileName: String by Delegates.notNull<String>()
   var packageName: String by Delegates.notNull<String>()

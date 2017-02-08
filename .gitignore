@@ -7,3 +7,5 @@
 /captures
 lib/
 out/
+build/
+gen/

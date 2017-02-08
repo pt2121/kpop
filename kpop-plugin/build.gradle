@@ -1,0 +1,7 @@
+apply plugin: 'kotlin'
+
+dependencies {
+  compile gradleApi()
+  compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.6'
+  compile project(':kpop-app')
+}

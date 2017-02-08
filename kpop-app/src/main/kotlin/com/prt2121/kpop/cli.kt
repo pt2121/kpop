@@ -39,7 +39,6 @@ fun makeCli(args: Array<String>): CommandLine? {
       .addOption(excludeOpt)
 
   try {
-    args.forEach(::println)
     return DefaultParser().parse(options, args)
   } catch (e: ParseException) {
     println(e)
