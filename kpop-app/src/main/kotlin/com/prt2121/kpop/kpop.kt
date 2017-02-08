@@ -14,7 +14,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException
 import java.io.File
 
 /**
- * updated from com.jakewharton.rxbinding.project
+ * based off of com.jakewharton.rxbinding.project
  * https://github.com/JakeWharton/RxBinding/blob/master/buildSrc/src/main/kotlin/com/jakewharton/rxbinding/project/KotlinGenTask.kt
  */
 
@@ -76,7 +76,7 @@ fun makeKFile(jFile: File): KFile {
   // Start parsing the java files
   val cu = JavaParser.parse(jFile)
 
-  val kFile = KFile(listOf("com.jakewharton.rxbinding2.internal.GenericTypeNullable"))
+  val kFile = KFile()
   kFile.fileName = jFile.name.replace(".java", ".kt")
 
   // Visit the appropriate nodes and extract information

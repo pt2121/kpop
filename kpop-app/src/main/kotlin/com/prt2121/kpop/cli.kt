@@ -32,11 +32,18 @@ fun makeCli(args: Array<String>): CommandLine? {
       .desc("exclude regex pattern")
       .build()
 
+  val ignoreImportOpt = Option.builder("ig")
+      .longOpt("ignore-import")
+      .hasArg()
+      .desc("ignore imports separated by comma")
+      .build()
+
   val options = Options()
       .addOption(fileOpt)
       .addOption(dirOpt)
       .addOption(includeOpt)
       .addOption(excludeOpt)
+      .addOption(ignoreImportOpt)
 
   try {
     return DefaultParser().parse(options, args)
@@ -69,3 +76,9 @@ fun excludePattern(command: CommandLine): Regex? =
       Regex(command.getOptionValue("e"))
     else
       null
+
+fun ignoreImport(command: CommandLine): List<String> =
+    if (command.hasOption("ig"))
+      command.getOptionValue("ig").split(',')
+    else
+      emptyList()
