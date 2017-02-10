@@ -60,12 +60,13 @@ internal fun resolveKotlinType(inputType: Type, methodAnnotations: List<Annotati
   }
 }
 
-internal fun deleteOutputDir(projectDir: String) {
-  val outputDir = File("$projectDir-kotlin${SLASH}src${SLASH}main${SLASH}kotlin")
-  outputDir.deleteRecursively()
-}
+fun kotlinMainDir(projectDir: File): File =
+    File("$projectDir-kotlin${SLASH}src${SLASH}main${SLASH}kotlin")
 
-internal fun generateKotlinDir(javaFile: File): File {
+fun deleteOutputDir(projectDir: File): Boolean =
+    kotlinMainDir(projectDir).deleteRecursively()
+
+fun generateKotlinDir(javaFile: File): File {
   val kotlinSrc = javaFile.parent.replace("java", "kotlin")
       .replace("${SLASH}src", "-kotlin${SLASH}src")
       .substringUntil("src${SLASH}main${SLASH}kotlin${SLASH}")
