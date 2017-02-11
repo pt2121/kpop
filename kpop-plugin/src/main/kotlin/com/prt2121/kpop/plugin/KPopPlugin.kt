@@ -20,6 +20,7 @@ class KPopPlugin : Plugin<Project> {
         source(fs)
         include(kpop.includePattern)
         exclude(kpop.excludePattern)
+        ignoreImports(kpop.ignoreImports)
       }
 
       genTask.outputs.upToDateWhen { false }

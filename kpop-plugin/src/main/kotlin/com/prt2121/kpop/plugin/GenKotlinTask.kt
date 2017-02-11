@@ -18,12 +18,20 @@ open class GenKotlinTask : SourceTask() {
     kotlinMainDir(projectDir)
   }
 
+  var ignoreImports = emptyList<String>()
+
+  fun ignoreImports(imports: List<String>) {
+    ignoreImports = imports
+  }
+
   @TaskAction
   fun genKotlin(inputs : IncrementalTaskInputs) {
     outputDir.deleteRecursively()
 
+    ignoreImports.forEach { println("ignore : $it") }
+
     getSource().forEach {
-      val kFile = makeKFile(it)
+      val kFile = makeKFile(it, ignoreImports)
       kFile.generate(outputDir)
     }
   }

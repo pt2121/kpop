@@ -16,5 +16,6 @@ buildscript{
 }
 
 kpop {
-  includePattern "**/StringUtils.java"
+  includePattern '**/StringUtils.java'
+  ignoreImport 'com.test.prat', 'com.doh.blah'
 }

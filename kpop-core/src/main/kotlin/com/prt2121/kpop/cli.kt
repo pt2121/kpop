@@ -77,7 +77,7 @@ fun excludePattern(command: CommandLine): Regex? =
     else
       null
 
-fun ignoreImport(command: CommandLine): List<String> =
+fun ignoreImports(command: CommandLine): List<String> =
     if (command.hasOption("ig"))
       command.getOptionValue("ig").split(',')
     else

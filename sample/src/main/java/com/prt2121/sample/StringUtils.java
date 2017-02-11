@@ -1,5 +1,7 @@
 package com.prt2121.sample;
 
+import com.test.prat;
+
 public class StringUtils {
 
   private StringUtils() {

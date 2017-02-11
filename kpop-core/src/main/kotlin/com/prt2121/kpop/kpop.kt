@@ -73,11 +73,11 @@ fun generateKotlinDir(javaFile: File): File {
   return File(kotlinSrc)
 }
 
-fun makeKFile(jFile: File): KFile {
+fun makeKFile(jFile: File, ignoredImports: List<String> = emptyList()): KFile {
   // Start parsing the java files
   val cu = JavaParser.parse(jFile)
 
-  val kFile = KFile()
+  val kFile = KFile(ignoredImports)
   kFile.fileName = jFile.name.replace(".java", ".kt")
 
   // Visit the appropriate nodes and extract information
