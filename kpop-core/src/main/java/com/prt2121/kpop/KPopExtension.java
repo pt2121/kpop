@@ -1,15 +1,18 @@
 package com.prt2121.kpop;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import kotlin.text.Regex;
 
+/**
+ * Gradle extension that holds properties for KPop
+ */
 public class KPopExtension {
   private File javaFile = null;
   private File javaDir = null;
-  private Regex includePattern = null;
-  private Regex excludePattern = null;
-  private List<String> ignoreImport = null;
+  private String includePattern = "";
+  private String excludePattern = "";
+  private List<String> ignoreImports = new ArrayList<>();
 
   public File getJavaFile() {
     return javaFile;
@@ -27,27 +30,27 @@ public class KPopExtension {
     this.javaDir = javaDir;
   }
 
-  public Regex getIncludePattern() {
+  public String getIncludePattern() {
     return includePattern;
   }
 
-  public void setIncludePattern(Regex includePattern) {
+  public void setIncludePattern(String includePattern) {
     this.includePattern = includePattern;
   }
 
-  public Regex getExcludePattern() {
+  public String getExcludePattern() {
     return excludePattern;
   }
 
-  public void setExcludePattern(Regex excludePattern) {
+  public void setExcludePattern(String excludePattern) {
     this.excludePattern = excludePattern;
   }
 
-  public List<String> getIgnoreImport() {
-    return ignoreImport;
+  public List<String> getIgnoreImports() {
+    return ignoreImports;
   }
 
-  public void setIgnoreImport(List<String> ignoreImport) {
-    this.ignoreImport = ignoreImport;
+  public void setIgnoreImports(List<String> ignoreImports) {
+    this.ignoreImports = ignoreImports;
   }
 }

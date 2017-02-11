@@ -7,6 +7,8 @@ import org.gradle.api.tasks.SourceSetContainer
 
 class KPopPlugin : Plugin<Project> {
   override fun apply(project: Project) {
+    val kpop = project.extensions.create("kpop", KPopExtension::class.java)
+
     project.afterEvaluate {
 
       val container = project.properties["sourceSets"] as SourceSetContainer
@@ -14,12 +16,10 @@ class KPopPlugin : Plugin<Project> {
         src.allJava.sourceDirectories.files
       }
 
-      project.extensions.create("kpop", KPopExtension::class.java)
-
       val genTask = project.tasks.create("generateKotlin", GenKotlinTask::class.java).apply {
         source(fs)
-//        include("")
-//        exclude("")
+        include(kpop.includePattern)
+        exclude(kpop.excludePattern)
       }
 
       genTask.outputs.upToDateWhen { false }

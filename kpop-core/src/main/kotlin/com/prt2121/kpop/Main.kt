@@ -11,7 +11,7 @@ object Main {
         ?.let(::javaFile)
         ?.let {
           val out = generateKotlinDir(it)
-          println("--> ${out.absoluteFile}")
+          println("writing to ${out.absoluteFile}")
           val kFile = makeKFile(it)
           kFile.generate(out)
         }

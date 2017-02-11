@@ -1,7 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'application'
-//apply plugin: 'kpop-plugin'
-//apply plugin: 'com.github.prt2121.kpop.plugin'
 apply plugin: 'kpop'
 
 mainClassName = 'com.prt2121.sample.Hi'
@@ -15,4 +13,8 @@ buildscript{
       classpath 'com.github.prt2121:kpop-plugin:0.0.1'
     }
   }
+}
+
+kpop {
+  includePattern "**/StringUtils.java"
 }

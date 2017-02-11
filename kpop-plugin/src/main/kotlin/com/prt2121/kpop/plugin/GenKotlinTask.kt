@@ -1,6 +1,7 @@
 package com.prt2121.kpop.plugin
 
 import com.prt2121.kpop.kotlinMainDir
+import com.prt2121.kpop.makeKFile
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.SourceTask
 import org.gradle.api.tasks.TaskAction
@@ -20,5 +21,10 @@ open class GenKotlinTask : SourceTask() {
   @TaskAction
   fun genKotlin(inputs : IncrementalTaskInputs) {
     outputDir.deleteRecursively()
+
+    getSource().forEach {
+      val kFile = makeKFile(it)
+      kFile.generate(outputDir)
+    }
   }
 }
