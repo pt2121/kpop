@@ -1,6 +1,8 @@
 apply plugin: 'kotlin'
+apply plugin: 'maven-publish'
 
 repositories {
+  mavenLocal()
   mavenCentral()
   jcenter()
 }
@@ -8,5 +10,18 @@ repositories {
 dependencies {
   compile gradleApi()
   compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.6'
-  compile project(':kpop-core')
+  compile 'com.github.prt2121:kpop-core:0.0.1'
+//  compile project(':kpop-core')
+}
+
+publishing {
+  publications {
+    maven(MavenPublication) {
+      groupId 'com.github.prt2121'
+      artifactId 'kpop-plugin'
+      version '0.0.1'
+
+      from components.java
+    }
+  }
 }

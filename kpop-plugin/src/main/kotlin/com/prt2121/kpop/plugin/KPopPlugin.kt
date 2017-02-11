@@ -1,6 +1,5 @@
 package com.prt2121.kpop.plugin
 
-import com.prt2121.kpop.KPopExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.SourceSetContainer
@@ -14,7 +13,7 @@ class KPopPlugin : Plugin<Project> {
         src.allJava.sourceDirectories.files
       }
 
-      project.extensions.create("kpop", KPopExtension::class.java)
+//      project.extensions.create("kpop", KPopExtension::class.java)
 
       val genTask = project.tasks.create("generateKotlin", GenKotlinTask::class.java).apply {
         source(fs)
