@@ -1,5 +1,6 @@
 package com.prt2121.kpop
 
+import com.prt2121.kpop.internal.KMethod
 import java.io.File
 import java.nio.file.Files
 import kotlin.properties.Delegates

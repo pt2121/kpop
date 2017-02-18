@@ -1,8 +1,9 @@
-package com.prt2121.kpop
+package com.prt2121.kpop.internal
 
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.expr.AnnotationExpr
 import com.github.javaparser.ast.type.TypeParameter
+import com.prt2121.kpop.resolveKotlinType
 
 /**
  * Represents a method implementation that needs to be wired up in Kotlin
@@ -85,7 +86,7 @@ class KMethod(declaration: MethodDeclaration) {
    *
    * @param bindingClass name of the RxBinding class this is tied to
    */
-  fun generate(bindingClass: String): String {
+  internal fun generate(bindingClass: String): String {
     ///////////////
     // STRUCTURE //
     ///////////////

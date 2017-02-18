@@ -1,4 +1,4 @@
-package com.prt2121.kpop
+package com.prt2121.kpop.internal
 
 fun String.substringUntil(delimiter: String, missingDelimiterValue: String = this): String {
   val index = indexOf(delimiter)
