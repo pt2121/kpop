@@ -33,7 +33,7 @@ fun deleteOutputDir(projectDir: File): Boolean =
     kotlinMainDir(projectDir).toOption().map(File::deleteRecursively).getOrElse { false }
 
 // for gradle project only
-internal fun makeGradleKotlinDirPath(javaFile: File): Either<Throwable, String> =
+fun makeGradleKotlinDirPath(javaFile: File): Either<Throwable, String> =
     if (!javaFile.exists()) {
       Either.left(FileNotFoundException("${javaFile.absolutePath} doesn't exist"))
     } else if (javaFile.parentFile.exists()) {
@@ -47,7 +47,7 @@ internal fun makeGradleKotlinDirPath(javaFile: File): Either<Throwable, String> 
 private fun makeGradleKotlinDir(javaFile: File): Either<Throwable, File> =
     makeGradleKotlinDirPath(javaFile).toDisjunction().map(::File).toEither()
 
-internal fun outDir(javaFile: File?, outDir: File?): Either<Throwable, File> =
+fun outDir(javaFile: File?, outDir: File?): Either<Throwable, File> =
     outDir.toOption()
         .fold({
           javaFile.toOption()

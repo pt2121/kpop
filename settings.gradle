@@ -1,1 +1,1 @@
-include ':kpop-core', ':kpop-plugin'
+include ':kpop-core', ':kpop-plugin', ':kpop-cli'
