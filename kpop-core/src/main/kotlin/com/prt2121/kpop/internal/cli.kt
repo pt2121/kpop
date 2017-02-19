@@ -38,12 +38,19 @@ internal fun makeCli(args: Array<String>): CommandLine? {
       .desc("ignore imports separated by comma")
       .build()
 
+  val outDir = Option.builder("o")
+      .longOpt("out-dir")
+      .hasArg()
+      .desc("output directory")
+      .build()
+
   val options = Options()
       .addOption(fileOpt)
       .addOption(dirOpt)
       .addOption(includeOpt)
       .addOption(excludeOpt)
       .addOption(ignoreImportOpt)
+      .addOption(outDir)
 
   try {
     return DefaultParser().parse(options, args)
@@ -82,3 +89,9 @@ internal fun ignoreImports(command: CommandLine): List<String> =
       command.getOptionValue("ig").split(',')
     else
       emptyList()
+
+internal fun outputDir(command: CommandLine): File? =
+    if (command.hasOption("o"))
+      File(command.getOptionValue("o"))
+    else
+      null

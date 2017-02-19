@@ -12,8 +12,10 @@ import com.github.javaparser.ast.type.*
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 import com.prt2121.kpop.internal.KMethod
 import com.prt2121.kpop.internal.substringUntil
+import org.funktionale.either.Either
 import sun.reflect.generics.reflectiveObjects.NotImplementedException
 import java.io.File
+import java.io.FileNotFoundException
 
 /**
  * based off of com.jakewharton.rxbinding.project
@@ -68,12 +70,21 @@ fun kotlinMainDir(projectDir: File): File =
 fun deleteOutputDir(projectDir: File): Boolean =
     kotlinMainDir(projectDir).deleteRecursively()
 
-fun generateKotlinDir(javaFile: File): File {
-  val kotlinSrc = javaFile.parent.replace("java", "kotlin")
-      .replace("${SLASH}src", "-kotlin${SLASH}src")
-      .substringUntil("src${SLASH}main${SLASH}kotlin${SLASH}")
-  return File(kotlinSrc)
-}
+// for gradle project only
+internal fun makeGradleKotlinDirPath(javaFile: File): Either<Throwable, String> =
+  if (!javaFile.exists()) {
+    Either.left(FileNotFoundException("${javaFile.absolutePath} doesn't exist"))
+  } else if (!javaFile.parentFile.exists()) {
+    println("can't create dir for kotlin package. using current directory")
+    Either.right(".")
+  } else {
+    Either.right(javaFile.parent.replace("java", "kotlin")
+        .replace("${SLASH}src", "-kotlin${SLASH}src")
+        .substringUntil("src${SLASH}main${SLASH}kotlin$SLASH"))
+  }
+
+fun generateGradleKotlinDir(javaFile: File): Either<Throwable, File> =
+    makeGradleKotlinDirPath(javaFile).toDisjunction().map(::File).toEither()
 
 fun makeKFile(jFile: File, ignoredImports: List<String> = emptyList()): KFile {
   // Start parsing the java files
