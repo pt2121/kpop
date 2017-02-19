@@ -44,16 +44,16 @@ internal fun makeGradleKotlinDirPath(javaFile: File): Either<Throwable, String> 
           .substringUntil("src${SLASH}main${SLASH}kotlin$SLASH"))
     }
 
-private fun generateGradleKotlinDir(javaFile: File): Either<Throwable, File> =
+private fun makeGradleKotlinDir(javaFile: File): Either<Throwable, File> =
     makeGradleKotlinDirPath(javaFile).toDisjunction().map(::File).toEither()
 
 internal fun outDir(javaFile: File?, outDir: File?): Either<Throwable, File> =
     outDir.toOption()
         .fold({
           javaFile.toOption()
-              .toEitherRight { FileNotFoundException() }
+              .toEitherRight { IllegalArgumentException() }
               .toDisjunction()
-              .flatMap { f -> generateGradleKotlinDir(f).toDisjunction() }
+              .flatMap { f -> makeGradleKotlinDir(f).toDisjunction() }
               .toEither()
         }) {
           if (it.exists()) Either.left(FileAlreadyExistsException(it)) else Either.right(it)

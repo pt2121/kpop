@@ -14,6 +14,7 @@ class kpop {
   @Test fun kotlinMainDir_exists() {
     val file = mock<File> {
       on { toString() } doReturn "dir"
+      on { exists() } doReturn true
     }
 
     assertEquals(File("dir-kotlin${SLASH}src${SLASH}main${SLASH}kotlin"), kotlinMainDir(file))
@@ -63,5 +64,25 @@ class kpop {
     }
 
     assertEquals("hi-kotlin${SLASH}src${SLASH}main${SLASH}kotlin$SLASH", makeGradleKotlinDirPath(file).right().get())
+  }
+
+  @Test fun outDir_nullDir_nullFile() {
+    assert(outDir(null, null).left().get() is IllegalArgumentException)
+  }
+
+  @Test fun outDir_dirExists() {
+    val dir = mock<File> {
+      on { exists() } doReturn true
+    }
+
+    assert(outDir(null, dir).left().get() is FileAlreadyExistsException)
+  }
+
+  @Test fun outDir_dirNotExists() {
+    val dir = mock<File> {
+      on { exists() } doReturn false
+    }
+
+    assertEquals(dir, outDir(null, dir).right().get())
   }
 }
