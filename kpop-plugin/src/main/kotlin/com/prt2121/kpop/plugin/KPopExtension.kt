@@ -1,4 +1,4 @@
-package com.prt2121.kpop
+package com.prt2121.kpop.plugin
 
 /**
  * Gradle extension that holds properties for KPop

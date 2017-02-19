@@ -1,6 +1,5 @@
 package com.prt2121.kpop.plugin
 
-import com.prt2121.kpop.KPopExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.SourceSetContainer

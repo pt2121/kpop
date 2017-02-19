@@ -29,14 +29,10 @@ class KFile(ignoredImports: List<String> = emptyList()) {
 
   /** Generates the code and writes it to the desired directory */
   fun generate(directory: File) {
-    var directoryPath = directory.absolutePath
-    var finalDir: File? = null
-    if (!packageName.isEmpty()) {
-      packageName.split('.').forEach {
-        directoryPath += File.separator + it
-      }
-      finalDir = File(directoryPath)
-      Files.createDirectories(finalDir.toPath())
+    val finalDir = finalDir(directory, packageName)
+
+    finalDir?.let {
+      Files.createDirectories(it.toPath())
     }
 
     File(finalDir, fileName).bufferedWriter().use { writer ->
@@ -55,4 +51,15 @@ class KFile(ignoredImports: List<String> = emptyList()) {
 
   override fun toString(): String =
       "KFile(fileName=$fileName, packageName=$packageName, bindingClass=$bindingClass, extendedClass=$extendedClass methods=$methods, imports=$imports)"
+}
+
+internal fun finalDir(directory: File, packageName: String): File? {
+  var directoryPath = directory.absolutePath
+  if (!packageName.isEmpty()) {
+    packageName.split('.').forEach {
+      directoryPath += File.separator + it
+    }
+    return File(directoryPath)
+  }
+  return null
 }

@@ -28,8 +28,6 @@ open class GenKotlinTask : SourceTask() {
   fun genKotlin(inputs : IncrementalTaskInputs) {
     outputDir.deleteRecursively()
 
-    ignoreImports.forEach { println("ignore : $it") }
-
     getSource().forEach {
       val kFile = makeKFile(it, ignoreImports)
       kFile.generate(outputDir)
