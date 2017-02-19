@@ -11,6 +11,7 @@ import com.prt2121.kpop.internal.substringUntil
 import org.funktionale.either.Either
 import org.funktionale.either.flatMap
 import org.funktionale.either.toEitherRight
+import org.funktionale.option.getOrElse
 import org.funktionale.option.toOption
 import java.io.File
 import java.io.FileNotFoundException
@@ -22,26 +23,28 @@ import java.io.FileNotFoundException
 
 private val SLASH = File.separator
 
-fun kotlinMainDir(projectDir: File): File =
-    File("$projectDir-kotlin${SLASH}src${SLASH}main${SLASH}kotlin")
+fun kotlinMainDir(projectDir: File): File? =
+    if (projectDir.exists())
+      File("$projectDir-kotlin${SLASH}src${SLASH}main${SLASH}kotlin")
+    else
+      null
 
 fun deleteOutputDir(projectDir: File): Boolean =
-    kotlinMainDir(projectDir).deleteRecursively()
+    kotlinMainDir(projectDir).toOption().map(File::deleteRecursively).getOrElse { false }
 
 // for gradle project only
 internal fun makeGradleKotlinDirPath(javaFile: File): Either<Throwable, String> =
     if (!javaFile.exists()) {
       Either.left(FileNotFoundException("${javaFile.absolutePath} doesn't exist"))
-    } else if (!javaFile.parentFile.exists()) {
-      println("can't create dir for kotlin package. using current directory")
-      Either.right(".")
+    } else if (javaFile.parentFile.exists()) {
+      Either.left(FileAlreadyExistsException(javaFile.parentFile))
     } else {
       Either.right(javaFile.parent.replace("java", "kotlin")
           .replace("${SLASH}src", "-kotlin${SLASH}src")
           .substringUntil("src${SLASH}main${SLASH}kotlin$SLASH"))
     }
 
-fun generateGradleKotlinDir(javaFile: File): Either<Throwable, File> =
+private fun generateGradleKotlinDir(javaFile: File): Either<Throwable, File> =
     makeGradleKotlinDirPath(javaFile).toDisjunction().map(::File).toEither()
 
 internal fun outDir(javaFile: File?, outDir: File?): Either<Throwable, File> =

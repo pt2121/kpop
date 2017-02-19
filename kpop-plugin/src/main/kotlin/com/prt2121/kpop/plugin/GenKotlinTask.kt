@@ -15,7 +15,7 @@ open class GenKotlinTask : SourceTask() {
 
   @get:OutputDirectory
   val outputDir: File by lazy {
-    kotlinMainDir(projectDir)
+    kotlinMainDir(projectDir)!! // projectDir must exist
   }
 
   var ignoreImports = emptyList<String>()
