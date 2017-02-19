@@ -8,7 +8,7 @@ import org.junit.Test
 import java.io.File
 import java.io.FileNotFoundException
 
-class kpop {
+class fileHelper {
   private val SLASH = File.separator
 
   @Test fun kotlinMainDir_exists() {
