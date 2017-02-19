@@ -2,8 +2,10 @@ package com.prt2121.kpop.internal
 
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.expr.AnnotationExpr
-import com.github.javaparser.ast.type.TypeParameter
-import com.prt2121.kpop.resolveKotlinType
+import com.github.javaparser.ast.expr.MarkerAnnotationExpr
+import com.github.javaparser.ast.expr.Name
+import com.github.javaparser.ast.type.*
+import sun.reflect.generics.reflectiveObjects.NotImplementedException
 
 /**
  * Represents a method implementation that needs to be wired up in Kotlin
@@ -17,6 +19,7 @@ class KMethod(declaration: MethodDeclaration) {
   private val parameters = declaration.parameters.subList(1, declaration.parameters.size)
   private val returnType = declaration.type
   private val typeParameters = typeParams(declaration.typeParameters)
+  private val GenericTypeNullableAnnotation = MarkerAnnotationExpr(Name("GenericTypeNullable"))
 
   /** Cleans up the generated doc and translates some html to equivalent markdown for Kotlin docs */
   private fun cleanUpDoc(doc: String): String {
@@ -123,5 +126,44 @@ class KMethod(declaration: MethodDeclaration) {
     }
 
     return builder.toString()
+  }
+
+  private fun resolveKotlinTypeByName(input: String): String =
+      when (input) {
+        "Object" -> "Any"
+        "Void" -> "Unit"
+        "Integer" -> "Int"
+        "int", "char", "boolean", "long", "float", "short", "byte" -> input.capitalize()
+        "List" -> "MutableList"
+        else -> input
+      }
+
+  /** Recursive function for resolving a Type into a Kotlin-friendly String representation */
+  internal fun resolveKotlinType(inputType: Type, methodAnnotations: List<AnnotationExpr>? = null): String {
+    when (inputType) {
+      is ArrayType -> return resolveKotlinType(inputType.elementType, methodAnnotations)
+      is ClassOrInterfaceType -> {
+        val baseType = resolveKotlinTypeByName(inputType.nameAsString)
+        if (inputType.typeArguments == null || !inputType.typeArguments.isPresent) {
+          return baseType
+        }
+        return "$baseType<${inputType.typeArguments.get().map { type: Type -> resolveKotlinType(type, methodAnnotations) }.joinToString()}>"
+      }
+      is PrimitiveType, is VoidType -> return resolveKotlinTypeByName(inputType.toString())
+      is WildcardType -> {
+        var nullable = ""
+        methodAnnotations
+            ?.filter { it == GenericTypeNullableAnnotation }
+            ?.forEach { nullable = "?" }
+        if (inputType.superTypes != null) {
+          return "in ${resolveKotlinType(inputType.superTypes.get())}$nullable"
+        } else if (inputType.extendedTypes != null) {
+          return "out ${resolveKotlinType(inputType.extendedTypes.get())}$nullable"
+        } else {
+          throw IllegalStateException("Wildcard with no super or extends")
+        }
+      }
+      else -> throw NotImplementedException()
+    }
   }
 }
