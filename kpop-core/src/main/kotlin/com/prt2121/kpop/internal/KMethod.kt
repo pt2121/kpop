@@ -11,7 +11,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException
  * Represents a method implementation that needs to be wired up in Kotlin
  */
 class KMethod(declaration: MethodDeclaration) {
-  private val DOC_LINK_REGEX = "[0-9A-Za-z._]*"
   private val name = declaration.name
   private val annotations: List<AnnotationExpr> = declaration.annotations
   private val comment = declaration.comment?.toString()?.let { cleanUpDoc(it) }
@@ -20,43 +19,6 @@ class KMethod(declaration: MethodDeclaration) {
   private val returnType = declaration.type
   private val typeParameters = typeParams(declaration.typeParameters)
   private val GenericTypeNullableAnnotation = MarkerAnnotationExpr(Name("GenericTypeNullable"))
-
-  /** Cleans up the generated doc and translates some html to equivalent markdown for Kotlin docs */
-  private fun cleanUpDoc(doc: String): String {
-    return doc.replace("<em>", "*")
-        .replace("</em>", "*")
-        .replace("<p>", "")
-        // JavaParser adds a couple spaces to the beginning of these for some reason
-        .replace("    *", "*")
-        // {@code view} -> `view`
-        .replace("\\{@code ($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
-          val codeName = result.destructured
-          "`${codeName.component1()}`"
-        }
-        // {@link Foo} -> [Foo]
-        .replace("\\{@link ($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
-          val foo = result.destructured
-          "[${foo.component1()}]"
-        }
-        // {@link Foo#bar} -> [Foo.bar]
-        .replace("\\{@link ($DOC_LINK_REGEX)#($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
-          val (foo, bar) = result.destructured
-          "[$foo.$bar]"
-        }
-        // {@linkplain Foo baz} -> [baz][Foo]
-        .replace("\\{@linkplain ($DOC_LINK_REGEX) ($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
-          val (foo, baz) = result.destructured
-          "[$baz][$foo]"
-        }
-        //{@linkplain Foo#bar baz} -> [baz][Foo.bar]
-        .replace("\\{@linkplain ($DOC_LINK_REGEX)#($DOC_LINK_REGEX) ($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
-          val (foo, bar, baz) = result.destructured
-          "[$baz][$foo.$bar]"
-        }
-        // Remove any trailing whitespace
-        .replace("(?m)\\s+$".toRegex(), "")
-        .trim()
-  }
 
   /** Generates method level type parameters */
   private fun typeParams(params: List<TypeParameter>?): String? {
@@ -128,16 +90,6 @@ class KMethod(declaration: MethodDeclaration) {
     return builder.toString()
   }
 
-  private fun resolveKotlinTypeByName(input: String): String =
-      when (input) {
-        "Object" -> "Any"
-        "Void" -> "Unit"
-        "Integer" -> "Int"
-        "int", "char", "boolean", "long", "float", "short", "byte" -> input.capitalize()
-        "List" -> "MutableList"
-        else -> input
-      }
-
   /** Recursive function for resolving a Type into a Kotlin-friendly String representation */
   internal fun resolveKotlinType(inputType: Type, methodAnnotations: List<AnnotationExpr>? = null): String {
     when (inputType) {
@@ -164,6 +116,57 @@ class KMethod(declaration: MethodDeclaration) {
         }
       }
       else -> throw NotImplementedException()
+    }
+  }
+
+  companion object {
+    internal val DOC_LINK_REGEX = "[0-9A-Za-z._]*"
+
+    internal fun resolveKotlinTypeByName(input: String): String =
+        when (input) {
+          "Object" -> "Any"
+          "Void" -> "Unit"
+          "Integer" -> "Int"
+          "int", "char", "boolean", "long", "float", "short", "byte" -> input.capitalize()
+          "List" -> "MutableList"
+          else -> input
+        }
+
+    /** Cleans up the generated doc and translates some html to equivalent markdown for Kotlin docs */
+    internal fun cleanUpDoc(doc: String): String {
+      return doc.replace("<em>", "*")
+          .replace("</em>", "*")
+          .replace("<p>", "")
+          // JavaParser adds a couple spaces to the beginning of these for some reason
+          .replace("    *", "*")
+          // {@code view} -> `view`
+          .replace("\\{@code ($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
+            val codeName = result.destructured
+            "`${codeName.component1()}`"
+          }
+          // {@link Foo} -> [Foo]
+          .replace("\\{@link ($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
+            val foo = result.destructured
+            "[${foo.component1()}]"
+          }
+          // {@link Foo#bar} -> [Foo.bar]
+          .replace("\\{@link ($DOC_LINK_REGEX)#($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
+            val (foo, bar) = result.destructured
+            "[$foo.$bar]"
+          }
+          // {@linkplain Foo baz} -> [baz][Foo]
+          .replace("\\{@linkplain ($DOC_LINK_REGEX) ($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
+            val (foo, baz) = result.destructured
+            "[$baz][$foo]"
+          }
+          //{@linkplain Foo#bar baz} -> [baz][Foo.bar]
+          .replace("\\{@linkplain ($DOC_LINK_REGEX)#($DOC_LINK_REGEX) ($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
+            val (foo, bar, baz) = result.destructured
+            "[$baz][$foo.$bar]"
+          }
+          // Remove any trailing whitespace
+          .replace("(?m)\\s+$".toRegex(), "")
+          .trim()
     }
   }
 }

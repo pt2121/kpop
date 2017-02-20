@@ -51,15 +51,17 @@ class KFile(ignoredImports: List<String> = emptyList()) {
 
   override fun toString(): String =
       "KFile(fileName=$fileName, packageName=$packageName, bindingClass=$bindingClass, extendedClass=$extendedClass methods=$methods, imports=$imports)"
-}
 
-internal fun finalDir(directory: File, packageName: String): File? {
-  var directoryPath = directory.absolutePath
-  if (!packageName.isEmpty()) {
-    packageName.split('.').forEach {
-      directoryPath += File.separator + it
+  companion object {
+    internal fun finalDir(directory: File, packageName: String): File? {
+      var directoryPath = directory.absolutePath
+      if (!packageName.isEmpty()) {
+        packageName.split('.').forEach {
+          directoryPath += File.separator + it
+        }
+        return File(directoryPath)
+      }
+      return null
     }
-    return File(directoryPath)
   }
-  return null
 }
