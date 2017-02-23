@@ -14,7 +14,7 @@ class KMethod(declaration: MethodDeclaration) {
   private val name = declaration.name
   private val annotations: List<AnnotationExpr> = declaration.annotations
   private val comment = declaration.comment?.toString()?.let { cleanUpDoc(it) }
-  private val extendedClass = declaration.parameters[0].type.toString()
+  private val extendedClass = declaration.parameters[0].type.toString() // todo
   private val parameters = declaration.parameters.subList(1, declaration.parameters.size)
   private val returnType = declaration.type
   private val typeParameters = typeParams(declaration.typeParameters)

@@ -81,7 +81,7 @@ fun makeKFile(jFile: File, ignoredImports: List<String> = emptyList()): KFile {
     }
 
     override fun visit(n: MethodDeclaration, file: KFile) {
-      if (n.isPublic)
+      if (n.isPublic && n.isStatic && n.parameters.isNotEmpty())
         file.methods.add(KMethod(n))
       // Explicitly avoid going deeper, we only care about top level methods. Otherwise
       // we'd hit anonymous inner classes and whatnot
