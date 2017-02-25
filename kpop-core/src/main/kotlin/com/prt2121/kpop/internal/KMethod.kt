@@ -49,20 +49,20 @@ class KMethod(declaration: MethodDeclaration) {
   /**
    * Generates the kotlin code for this method
    *
-   * @param bindingClass name of the RxBinding class this is tied to
+   * @param clazz name of the RxBinding class this is tied to
    */
-  internal fun generate(bindingClass: String): String {
+  internal fun generate(clazz: String): String {
     ///////////////
     // STRUCTURE //
     ///////////////
     // Javadoc
     // public inline fun DrawerLayout.drawerOpen(): Observable<Boolean> = RxDrawerLayout.drawerOpen(this)
-    // <access specifier> inline fun <extendedClass>.<name>(params): <type> = <bindingClass>.name(this, params)
+    // <access specifier> inline fun <extendedClass>.<name>(params): <type> = <clazz>.name(this, params)
 
     val fParams = kParams(true)
     val jParams = kParams(false)
 
-    val builder = StringBuilder();
+    val builder = StringBuilder()
 
     // doc
     builder.append("${comment ?: ""}\n")
@@ -80,10 +80,11 @@ class KMethod(declaration: MethodDeclaration) {
     builder.append(" = ")
 
     // target method call
-    builder.append("$bindingClass.$name(${if (jParams.isNotEmpty()) "this, $jParams" else "this"})")
+    builder.append("$clazz.$name(${if (jParams.isNotEmpty()) "this, $jParams" else "this"})")
 
+    // todo
     // Void --> Unit mapping
-    if (kotlinType == "Observable<Unit>") {
+    if (kotlinType.contains("<Unit>")) {
       builder.append(".map { Unit }")
     }
 
@@ -97,9 +98,10 @@ class KMethod(declaration: MethodDeclaration) {
       is ClassOrInterfaceType -> {
         val baseType = resolveKotlinTypeByName(inputType.nameAsString)
         if (inputType.typeArguments == null || !inputType.typeArguments.isPresent) {
-          return baseType
+          return if (baseType == inputType.nameAsString) inputType.toString() else baseType
         }
-        return "$baseType<${inputType.typeArguments.get().map { type: Type -> resolveKotlinType(type, methodAnnotations) }.joinToString()}>"
+        val base = if (baseType == inputType.nameAsString) inputType.toString().substringBefore("<") else baseType
+        return "$base<${inputType.typeArguments.get().map { type: Type -> resolveKotlinType(type, methodAnnotations) }.joinToString()}>"
       }
       is PrimitiveType, is VoidType -> return resolveKotlinTypeByName(inputType.toString())
       is WildcardType -> {

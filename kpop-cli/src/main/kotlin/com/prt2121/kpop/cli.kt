@@ -1,4 +1,4 @@
-package com.prt2121.kpop.internal
+package com.prt2121.kpop
 
 import org.apache.commons.cli.CommandLine
 import org.apache.commons.cli.DefaultParser

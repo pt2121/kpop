@@ -1,10 +1,5 @@
 package com.prt2121.kpop
 
-import com.prt2121.kpop.internal.ignoreImports
-import com.prt2121.kpop.internal.javaFile
-import com.prt2121.kpop.internal.makeCli
-import com.prt2121.kpop.internal.outputDir
-
 object Main {
 
   /**
