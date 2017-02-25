@@ -10,7 +10,7 @@ buildscript{
     jcenter()
 
     dependencies{
-      classpath 'com.github.prt2121:kpop-plugin:0.0.1'
+      classpath 'com.github.prt2121:kpop-plugin:0.1.0'
     }
   }
 }
