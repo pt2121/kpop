@@ -75,7 +75,7 @@ fun makeKFile(jFile: File, ignoredImports: List<String> = emptyList()): KFile {
     }
 
     override fun visit(n: ClassOrInterfaceDeclaration, file: KFile) {
-      file.bindingClass = n.nameAsString
+      file.clazz = n.nameAsString
       file.extendedClass = n.nameAsString
       super.visit(n, file)
     }

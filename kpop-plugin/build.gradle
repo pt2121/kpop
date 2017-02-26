@@ -5,6 +5,7 @@ dependencies {
   compile gradleApi()
   compile 'org.jetbrains.kotlin:kotlin-stdlib:1.0.6'
   compile 'com.github.prt2121:kpop-core:0.1.0'
+  compile 'com.android.tools.build:gradle:2.1.0'
 //  compile project(':kpop-core')
 }
 

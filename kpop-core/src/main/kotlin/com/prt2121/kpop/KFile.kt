@@ -6,7 +6,7 @@ import java.nio.file.Files
 import kotlin.properties.Delegates
 
 /**
- * Represents a kotlin file that corresponds to a Java file/class in an RxBinding module
+ * Represents a kotlin file that corresponds to a Java file/class
  */
 class KFile(ignoredImports: List<String> = emptyList()) {
   /**
@@ -22,7 +22,7 @@ class KFile(ignoredImports: List<String> = emptyList()) {
 
   var fileName: String by Delegates.notNull<String>()
   var packageName: String by Delegates.notNull<String>()
-  var bindingClass: String by Delegates.notNull<String>()
+  var clazz: String by Delegates.notNull<String>()
   var extendedClass: String by Delegates.notNull<String>()
   val methods = mutableListOf<KMethod>()
   val imports = mutableListOf<String>()
@@ -44,13 +44,13 @@ class KFile(ignoredImports: List<String> = emptyList()) {
           }
 
       methods.forEach { m ->
-        writer.append("\n${m.generate(bindingClass)}\n")
+        writer.append("\n${m.generate(clazz)}\n")
       }
     }
   }
 
   override fun toString(): String =
-      "KFile(fileName=$fileName, packageName=$packageName, bindingClass=$bindingClass, extendedClass=$extendedClass methods=$methods, imports=$imports)"
+      "KFile(fileName=$fileName, packageName=$packageName, clazz=$clazz, extendedClass=$extendedClass methods=$methods, imports=$imports)"
 
   companion object {
     internal fun finalDir(directory: File, packageName: String): File? {

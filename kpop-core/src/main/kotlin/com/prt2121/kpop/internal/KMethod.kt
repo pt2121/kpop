@@ -49,7 +49,7 @@ class KMethod(declaration: MethodDeclaration) {
   /**
    * Generates the kotlin code for this method
    *
-   * @param clazz name of the RxBinding class this is tied to
+   * @param clazz name of the class this is tied to
    */
   internal fun generate(clazz: String): String {
     ///////////////
@@ -140,7 +140,7 @@ class KMethod(declaration: MethodDeclaration) {
           .replace("</em>", "*")
           .replace("<p>", "")
           // JavaParser adds a couple spaces to the beginning of these for some reason
-          .replace("    *", "*")
+          .replace("   *", " *")
           // {@code view} -> `view`
           .replace("\\{@code ($DOC_LINK_REGEX)\\}".toRegex()) { result: MatchResult ->
             val codeName = result.destructured
