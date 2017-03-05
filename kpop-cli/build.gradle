@@ -1,3 +1,7 @@
+plugins {
+  id "com.jfrog.bintray" version "1.7.3"
+}
+
 apply plugin: 'application'
 apply plugin: 'kotlin'
 apply plugin: 'maven-publish'
@@ -20,12 +24,47 @@ jar {
 
 publishing {
   publications {
-    maven(MavenPublication) {
+    MyPublication(MavenPublication) {
       groupId 'com.github.prt2121'
       artifactId 'kpop-cli'
       version '0.1.0'
 
       from components.java
+
+      artifact sourcesJar
+      artifact javadocJar
     }
   }
+}
+
+bintray {
+  user = 'prt2121' //System.getenv('BINTRAY_USER')
+  key = '' //System.getenv('BINTRAY_KEY') System.getenv doesn't work
+  publications = ['MyPublication']
+  pkg {
+    repo = 'maven'
+    name = 'kpop-cli'
+    licenses = ['Apache-2.0']
+    vcsUrl = 'https://github.com/prt2121/kpop.git'
+    version {
+      name = '0.1.0'
+      desc = 'kpop cli 0.1.0'
+      released  = new Date()
+      vcsTag = '0.1.0'
+    }
+  }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+artifacts {
+  archives sourcesJar, javadocJar
 }
