@@ -8,7 +8,7 @@ apply plugin: 'maven-publish'
 dependencies {
   compile gradleApi()
   compile 'org.jetbrains.kotlin:kotlin-stdlib:1.1.0'
-  compile 'com.github.prt2121:kpop-core:0.1.1'
+  compile 'com.github.prt2121:kpop-core:0.1.2'
   compile 'com.android.tools.build:gradle:2.1.0'
 //  compile project(':kpop-core')
 }
@@ -40,7 +40,7 @@ publishing {
     MyPublication(MavenPublication) {
       groupId 'com.github.prt2121'
       artifactId 'kpop-plugin'
-      version '0.1.1'
+      version '0.1.2'
       pom.withXml {
         def root = asNode()
         root.appendNode('description', 'Gradle plugin for generating Kotlin extensions from Java static methods')
@@ -66,10 +66,10 @@ bintray {
     licenses = ['Apache-2.0']
     vcsUrl = 'https://github.com/prt2121/kpop.git'
     version {
-      name = '0.1.1'
-      desc = 'kpop plugin 0.1.1'
+      name = '0.1.2'
+      desc = 'kpop plugin 0.1.2'
       released  = new Date()
-      vcsTag = '0.1.1'
+      vcsTag = '0.1.2'
 
       gpg {
         sign = true

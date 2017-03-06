@@ -9,7 +9,7 @@ apply plugin: 'maven-publish'
 dependencies {
   compile 'org.jetbrains.kotlin:kotlin-stdlib:1.1.0'
   compile 'commons-cli:commons-cli:1.3.1'
-  compile 'com.github.prt2121:kpop-core:0.1.1'
+  compile 'com.github.prt2121:kpop-core:0.1.2'
   //compile project(':kpop-core')
 }
 
@@ -49,7 +49,7 @@ publishing {
     MyPublication(MavenPublication) {
       groupId 'com.github.prt2121'
       artifactId 'kpop-cli'
-      version '0.1.1'
+      version '0.1.2'
 
       from components.java
 
@@ -77,10 +77,10 @@ bintray {
     licenses = ['Apache-2.0']
     vcsUrl = 'https://github.com/prt2121/kpop.git'
     version {
-      name = '0.1.1'
-      desc = 'kpop cli 0.1.1'
+      name = '0.1.2'
+      desc = 'kpop cli 0.1.2'
       released  = new Date()
-      vcsTag = '0.1.1'
+      vcsTag = '0.1.2'
 
       gpg {
         sign = true
