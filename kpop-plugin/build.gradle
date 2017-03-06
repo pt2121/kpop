@@ -8,9 +8,31 @@ apply plugin: 'maven-publish'
 dependencies {
   compile gradleApi()
   compile 'org.jetbrains.kotlin:kotlin-stdlib:1.1.0'
-  compile 'com.github.prt2121:kpop-core:0.1.0'
+  compile 'com.github.prt2121:kpop-core:0.1.1'
   compile 'com.android.tools.build:gradle:2.1.0'
 //  compile project(':kpop-core')
+}
+
+def pomConfig = {
+  licenses {
+    license {
+      name "The Apache Software License, Version 2.0"
+      url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+      distribution "repo"
+    }
+  }
+  scm {
+    url 'git@github.com:prt2121/kpop.git'
+    connection 'scm:git@github.com:prt2121/kpop.git'
+    developerConnection 'scm:git@github.com:prt2121/kpop.git'
+  }
+  developers {
+    developer {
+      id "prt2121"
+      name "Prat Tanapaisankit"
+      email "prt2121@users.noreply.github.com"
+    }
+  }
 }
 
 publishing {
@@ -18,7 +40,14 @@ publishing {
     MyPublication(MavenPublication) {
       groupId 'com.github.prt2121'
       artifactId 'kpop-plugin'
-      version '0.1.0'
+      version '0.1.1'
+      pom.withXml {
+        def root = asNode()
+        root.appendNode('description', 'Gradle plugin for generating Kotlin extensions from Java static methods')
+        root.appendNode('name', 'kpop-plugin')
+        root.appendNode('url', 'https://github.com/prt2121/kpop')
+        root.children().last() + pomConfig
+      }
 
       from components.java
       artifact sourcesJar
@@ -28,8 +57,8 @@ publishing {
 }
 
 bintray {
-  user = 'prt2121' //System.getenv('BINTRAY_USER')
-  key = '' //System.getenv('BINTRAY_KEY') System.getenv doesn't work
+  user = 'prt2121'
+  key = ''
   publications = ['MyPublication']
   pkg {
     repo = 'maven'
@@ -37,10 +66,20 @@ bintray {
     licenses = ['Apache-2.0']
     vcsUrl = 'https://github.com/prt2121/kpop.git'
     version {
-      name = '0.1.0'
-      desc = 'kpop plugin 0.1.0'
+      name = '0.1.1'
+      desc = 'kpop plugin 0.1.1'
       released  = new Date()
-      vcsTag = '0.1.0'
+      vcsTag = '0.1.1'
+
+      gpg {
+        sign = true
+        passphrase = ''
+      }
+      mavenCentralSync {
+        sync = true
+        user = 'prt2121' //OSS user token
+        password = '' //OSS user password
+      }
     }
   }
 }
