@@ -1,6 +1,7 @@
 package com.prt2121.kpop.internal
 
 import com.github.javaparser.ast.body.MethodDeclaration
+import com.github.javaparser.ast.body.Parameter
 import com.github.javaparser.ast.expr.AnnotationExpr
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr
 import com.github.javaparser.ast.expr.Name
@@ -13,7 +14,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException
 class KMethod(declaration: MethodDeclaration) {
   private val name = declaration.name
   private val annotations: List<AnnotationExpr> = declaration.annotations
-  private val comment = declaration.comment?.toString()?.let { cleanUpDoc(it) }
+  private val comment = declaration.comment?.toString()?.let { cleanUpDoc(it, declaration.parameters.first() ) }
   private val extendedClass = declaration.parameters[0].type.toString() // todo
   private val parameters = declaration.parameters.subList(1, declaration.parameters.size)
   private val returnType = declaration.type
@@ -135,7 +136,7 @@ class KMethod(declaration: MethodDeclaration) {
         }
 
     /** Cleans up the generated doc and translates some html to equivalent markdown for Kotlin docs */
-    internal fun cleanUpDoc(doc: String): String {
+    internal fun cleanUpDoc(doc: String, selfParam: Parameter): String {
       return doc.replace("<em>", "*")
           .replace("</em>", "*")
           .replace("<p>", "")
@@ -168,7 +169,20 @@ class KMethod(declaration: MethodDeclaration) {
           }
           // Remove any trailing whitespace
           .replace("(?m)\\s+$".toRegex(), "")
+          // Remove the first param doc
+          .replaceFirstParamDoc(selfParam)
           .trim()
+    }
+
+    private fun String.replaceFirstParamDoc(param: Parameter): String {
+      val lines = lines()
+      val start = lines.indexOfFirst { it.contains("@param ${param.nameAsString}") }
+      val numOfLines = lines.subList(start + 1, lines.size).indexOfFirst {
+        it.contains("@") || it.contains("*/")
+      }
+      return lines.filterIndexed {
+        i, _ -> i !in start..(start + numOfLines)
+      }.joinToString("\n")
     }
   }
 }
