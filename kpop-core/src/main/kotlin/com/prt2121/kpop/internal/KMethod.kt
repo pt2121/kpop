@@ -177,6 +177,8 @@ class KMethod(declaration: MethodDeclaration) {
     private fun String.replaceFirstParamDoc(param: Parameter): String {
       val lines = lines()
       val start = lines.indexOfFirst { it.contains("@param ${param.nameAsString}") }
+      if (start == -1)
+        return this
       val numOfLines = lines.subList(start + 1, lines.size).indexOfFirst {
         it.contains("@") || it.contains("*/")
       }
